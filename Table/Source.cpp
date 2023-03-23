@@ -44,7 +44,25 @@ public:
         return cols;
     }
 
-    void setData(int row, int col, int value) { // встановити значення
+    void setData(int row, int col, int value) {
+        if (row >= rows || col >= cols) {
+            int newRows = max(row + 1, rows);
+            int newCols = max(col + 1, cols);
+            int** newData = new int* [newRows];
+            for (int i = 0; i < newRows; i++) {
+                newData[i] = new int[newCols];
+                for (int j = 0; j < newCols; j++) {
+                    newData[i][j] = (i < rows&& j < cols) ? data[i][j] : 0;
+                }
+            }
+            for (int i = 0; i < rows; i++) {
+                delete[] data[i];
+            }
+            delete[] data;
+            data = newData;
+            rows = newRows;
+            cols = newCols;
+        }
         data[row][col] = value;
     }
 
@@ -89,7 +107,6 @@ bool Test1() {
         return false;
     }
 }
-
 bool Test2() {
     TableTest table(5, 5);
     table.setData(2, 2, 363);
@@ -104,7 +121,6 @@ bool Test2() {
         return false;
     }
 }
-
 bool Test3() {
     TableTest table(2, 5);
     table.setData(1, 2, 363);
